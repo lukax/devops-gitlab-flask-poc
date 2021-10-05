@@ -35,8 +35,17 @@ cd ./rpaas
 terraform plan -out=tfplan
 terraform apply tfplan
 
-# 10 checkout service info
-tsuru service instance info rpaasv2-be-rjdev desafiodevops-rpaas-be-dev
+# install rpaasv2 plugin
+( set -eu -o pipefail \
+&& mkdir -p ~/.tsuru/plugins \
+&& version=$(curl -fsSL https://api.github.com/repos/tsuru/rpaas-operator/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
+&& curl -fsSL "https://github.com/tsuru/rpaas-operator/releases/download/v${version}/rpaasv2_${version}_$(uname -s)_$(uname -m).tar.gz" \
+|  tar -C ~/.tsuru/plugins -xzf- rpaasv2 \
+&& echo -e 'rpaasv2 plugin successfully installed!\nYou can use it by issuing "tsuru rpaasv2 -h" right now.' \
+|| echo 'failed to install rpaasv2 plugin... try again later' && false )
+
+# checkout RPaaS service info
+tsuru rpaasv2 info -s rpaasv2-be-rjdev -i desafiodevops-rpaas-be-dev
 
 # 11 terraform apply app
 cd ../app
@@ -54,3 +63,12 @@ tsuru app info --app desafiodevops-dev
 
 # 14 run tests
 APP_URL=http://desafiodevops-dev.gcloud.dev.globoi.com ../../tests/api_tests.sh
+
+# connect to rpaas shell
+tsuru rpaasv2 shell -s rpaasv2-be-rjdev -i desafiodevops-rpaas-be-dev
+
+# connect to app container shell
+tsuru app shell -a desafiodevops-dev
+
+# test the app through RPaaS instance
+APP_URL=http://desafiodevops-rpaas-be-dev-service.rpaasv2-be-rjdev.rpaas.tsuru.dev.globoi.com ../../tests/api_tests.sh

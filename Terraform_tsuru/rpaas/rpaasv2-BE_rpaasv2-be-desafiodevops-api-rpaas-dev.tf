@@ -20,10 +20,12 @@ location / {
   proxy_cache_lock on;
   proxy_cache_background_update on;
   proxy_pass            http://desafiodevops_dev$request_uri;
+  proxy_set_header Host "desafiodevops-dev.gcloud.dev.globoi.com";
   break;
 }
 	EOT
 }
+# adicionado proxy_set_header host para o router nao ficar perdido
 
 resource "rpaas_block" "rpaasv2-be-desafiodevops-api-dev-rpaas-be-gcp-dev-http" {
   depends_on   = [tsuru_service_instance.rpaasv2-be-desafiodevops-rpaas-be-dev]
@@ -32,7 +34,7 @@ resource "rpaas_block" "rpaasv2-be-desafiodevops-api-dev-rpaas-be-gcp-dev-http" 
   name         = "http"
   content      = <<EOT
 upstream desafiodevops_dev {
-    server desafiodevops-dev.gcloud.globoi.com fail_timeout=2s max_fails=0 weight=1;
+    server desafiodevops-dev.gcloud.dev.globoi.com fail_timeout=2s max_fails=0 weight=1;
     keepalive 100;
 }
 
