@@ -1,16 +1,20 @@
-resource "tsuru_service_instance" "rpaasv2-be-desafiodevops-rpaas-be-dev" {
-  name         = "desafiodevops-rpaas-be-dev"
-  service_name = "rpaasv2-be-rjdev"
+data "tsuru_app" "desafiodevops-dev" {
+  name = "desafiodevops-dev"
+}
+
+resource "tsuru_service_instance" "this" {
+  name         = "desafiodevops-rpaas-fe-dev"
+  service_name = "rpaasv2-fe-rjdev"
   description  = ""
   owner        = "infravideos"
   plan         = ""
   tags         = []
   parameters   = {}
 }
-resource "rpaas_route" "rpaasv2-be-desafiodevops-rpaas-be-dev" {
-  depends_on   = [tsuru_service_instance.rpaasv2-be-desafiodevops-rpaas-be-dev]
-  service_name = "rpaasv2-be-rjdev"
-  instance     = "desafiodevops-rpaas-be-dev"
+resource "rpaas_route" "this" {
+  depends_on   = [tsuru_service_instance.this]
+  service_name = "rpaasv2-fe-rjdev"
+  instance     = "desafiodevops-rpaas-fe-dev"
   path         = "/"
   content      = <<EOT
 location / {
@@ -27,10 +31,10 @@ location / {
 }
 # adicionado proxy_set_header host para o router nao ficar perdido
 
-resource "rpaas_block" "rpaasv2-be-desafiodevops-api-dev-rpaas-be-gcp-dev-http" {
-  depends_on   = [tsuru_service_instance.rpaasv2-be-desafiodevops-rpaas-be-dev]
-  service_name = "rpaasv2-be-rjdev"
-  instance     = "desafiodevops-rpaas-be-dev"
+resource "rpaas_block" "this" {
+  depends_on   = [tsuru_service_instance.this]
+  service_name = "rpaasv2-fe-rjdev"
+  instance     = "desafiodevops-rpaas-fe-dev"
   name         = "http"
   content      = <<EOT
 upstream desafiodevops_dev {
