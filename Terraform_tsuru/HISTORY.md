@@ -1,5 +1,10 @@
 # First steps and an overview to get up and running in tsuru and terraform
 
+# 0 setup tsuru
+tsuru target-remove default
+tsuru target-add default https://tsuru.globoi.com -s
+tsuru login  
+
 # 1 create app
 tsuru app-create desafio-devops static -o dev -t infravideos
 

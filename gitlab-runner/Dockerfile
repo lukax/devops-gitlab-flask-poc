@@ -33,4 +33,3 @@ VOLUME [ "/etc/gitlab-runner", "/home/gitlab-runner" ]
 
 CMD curl -sv https://gitlab.globoi.com/api/v4/runners gitlab-runner register && gitlab-runner run --user=gitlab-runner --working-directory=/home/gitlab-runner
 
-

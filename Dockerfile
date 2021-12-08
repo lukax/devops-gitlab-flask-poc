@@ -8,6 +8,8 @@ WORKDIR /usr/src
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN apk add zlib-dev jpeg-dev gcc musl-dev
+
 # install dependencies
 RUN pip install --upgrade pip
 

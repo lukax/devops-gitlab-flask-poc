@@ -2,7 +2,7 @@ version: "3.3"
    
 services:
   api:
-    image: docker-tsuru.artifactory.globoi.com/tsuru/desafio-devops
+    image: docker.artifactory.globoi.com/infravideos/desafiodevops
     build: 
       context: .
       dockerfile: ./Dockerfile
